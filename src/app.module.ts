@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { EnvConfig } from './config/env.config';
 import { JoiValidationSchema } from './config/joi.validation';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { PlayerModule } from './player/player.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     MongooseModule.forRoot(process.env.MONGO_URI),
     CommonModule,
     CloudinaryModule,
+    PlayerModule,
   ],
   controllers: [],
   providers: [],
