@@ -11,6 +11,9 @@ export class CreatePlayerDto {
   avatar?: string;
 
   @IsOptional()
+  image?: Express.Multer.File;
+
+  @IsOptional()
   total_team_wins?: number;
 
   @IsOptional()
