@@ -17,7 +17,7 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module';
         schema: PlayerSchema,
       },
     ]),
-    ConfigModule
+    ConfigModule,
   ],
   exports: [MongooseModule],
 })

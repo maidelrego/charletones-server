@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from './cloudinary.service';
-import { options } from 'joi';
 import { UploadApiOptions } from 'cloudinary';
 
 @Controller('cloudinary')
@@ -28,9 +27,12 @@ export class CloudinaryController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadImageToCloudinary(@UploadedFile() file: Express.Multer.File,options: UploadApiOptions) {
+  async uploadImageToCloudinary(
+    @UploadedFile() file: Express.Multer.File,
+    options: UploadApiOptions,
+  ) {
     try {
-      const uploadedImage = await this.cloudinary.uploadImage(options,file);
+      const uploadedImage = await this.cloudinary.uploadImage(options, file);
 
       if (uploadedImage) {
         return uploadedImage;

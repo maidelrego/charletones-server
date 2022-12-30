@@ -19,8 +19,7 @@ export class PlayerService {
     @InjectModel(Player.name)
     private readonly playerModel: Model<Player>,
     private readonly configService: ConfigService,
-    private readonly cloudinaryService: CloudinaryService
-
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async create(createPlayerDto: CreatePlayerDto) {
@@ -45,24 +44,25 @@ export class PlayerService {
   }
 
   async findOne(id: string) {
-    let player: Player;
-    player = await this.playerModel.findById(id);
-    if (!player) throw new NotFoundException(`Player with id :: ${id} not exist `);
+    const player = await this.playerModel.findById(id);
+    if (!player)
+      throw new NotFoundException(`Player with id :: ${id} not exist `);
 
     return player;
   }
 
   async update(id: string, updatePlayerDto: UpdatePlayerDto) {
-    
     const { image } = updatePlayerDto;
     const player = await this.findOne(id);
-    
-    if(image){
-       
-          await this.cloudinaryService.deleteImages(player.cloudinary_id);
-          const {secure_url,asset_id} = await this.cloudinaryService.uploadImage({folder: 'Avatars'},image);
-          updatePlayerDto.avatar = secure_url;
-          updatePlayerDto.cloudinary_id = asset_id;   
+
+    if (image) {
+      await this.cloudinaryService.deleteImages(player.cloudinary_id);
+      const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
+        { folder: 'Avatars' },
+        image,
+      );
+      updatePlayerDto.avatar = secure_url;
+      updatePlayerDto.cloudinary_id = asset_id;
     }
 
     if (updatePlayerDto.name)
@@ -79,7 +79,7 @@ export class PlayerService {
     const player = await this.findOne(id);
     await this.cloudinaryService.deleteImages(player.cloudinary_id);
     await player.deleteOne();
-    
+
     return;
   }
 

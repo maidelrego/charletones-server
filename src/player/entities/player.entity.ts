@@ -1,56 +1,55 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({ timestamps: true})
+@Schema({ timestamps: true })
 export class Player extends Document {
- 
   @Prop({
-    required: true
+    required: true,
   })
   name: string;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   total_team_wins: number;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   total_alone_wins: number;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   total_team_loses: number;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   total_alone_loses: number;
 
   @Prop({
-    default: null
+    default: null,
   })
   cloudinary_id: string;
 
   @Prop({
-    required: null
+    required: null,
   })
   avatar: string;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   total_kill: number;
 
   @Prop({
-    default: 0
+    default: 0,
   })
   total_deads: number;
 
   @Prop({
-    default: false
+    default: false,
   })
   playerType: boolean;
 }

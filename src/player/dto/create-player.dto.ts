@@ -1,7 +1,6 @@
-import {IsString, MinLength, IsOptional } from 'class-validator';
+import { IsString, MinLength, IsOptional } from 'class-validator';
 
 export class CreatePlayerDto {
- 
   @IsString()
   @MinLength(1)
   name: string;
@@ -18,7 +17,7 @@ export class CreatePlayerDto {
 
   @IsOptional()
   total_alone_wins?: number;
-  
+
   @IsOptional()
   total_team_loses?: number;
 
