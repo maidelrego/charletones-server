@@ -10,6 +10,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   Query,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto/index';
@@ -21,6 +22,7 @@ import { ValidRoles } from './interfaces/valid-roles.interfece';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -55,39 +57,14 @@ export class AuthController {
   getAllUsers(@Query() paginationDto: PaginationDto){
     return this.authService.findAll(paginationDto);
   }
+
+  @Get('user/:id')
+  getOneByEmail(@Param('id',ParseMongoIdPipe) id: string){
+    return this.authService.findOne(id);
+  }
    
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
-  }
-
-  @Get('checkAuth')
-  @Auth()
-  checkAuthStatus(@GetUser() user: User) {
-    return this.authService.checkAuthStatus(user);
-  }
-
-  //@SetMetadata('roles',['admin','super-user'])
-  @Get('private')
-  @RoleProtected(ValidRoles.superUser, ValidRoles.admin)
-  @UseGuards(AuthGuard(), UserRoleGuard)
-  testingPrivateRoute(@GetUser() user: User, @GetUser('email') email: string) {
-    return {
-      ok: true,
-      msg: 'Hola Mundo',
-      user,
-      email,
-    };
-  }
-
-  @Get('private3')
-  @Auth(ValidRoles.superUser)
-  testingPrivateRoute3(@GetUser() user: User, @GetUser('email') email: string) {
-    return {
-      ok: true,
-      msg: 'Hola Mundo',
-      user,
-      email,
-    };
   }
 }

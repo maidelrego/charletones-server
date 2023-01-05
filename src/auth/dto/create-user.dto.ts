@@ -1,4 +1,4 @@
-import { IsOptional } from 'class-validator';
+import { IsArray, IsOptional } from 'class-validator';
 /* eslint-disable prettier/prettier */
 import {
   IsEmail,
@@ -36,6 +36,10 @@ export class CreateUserDto {
 
   @IsOptional()
   cloudinary_id?: string;
+
+  @IsOptional()
+ // @IsArray()
+  roles?: string[];
 
   @IsOptional()
   isActive?: boolean;

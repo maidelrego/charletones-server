@@ -3,18 +3,23 @@ import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User, UserSchema } from './entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService,JwtStrategy],
   imports: [
+    MongooseModule.forFeature([
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
+    ]),
     ConfigModule,
-    TypeOrmModule.forFeature([User]),
     PassportModule.register({
       defaultStrategy: 'jwt'
     }),
@@ -39,7 +44,7 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
     })
   ],
-  exports: [TypeOrmModule,JwtStrategy,PassportModule,JwtModule]
+  exports: [MongooseModule,JwtStrategy,PassportModule,JwtModule,AuthService]
 
 })
 export class AuthModule { }

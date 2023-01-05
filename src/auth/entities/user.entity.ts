@@ -1,59 +1,55 @@
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  ObjectIdColumn,
-  OneToMany,
-} from 'typeorm';
+import { Game } from '../../games/entities/game.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Exclude, Transform, Type } from 'class-transformer';
+import mongoose, { Document, ObjectId } from 'mongoose';
+import { string } from 'joi';
 
-@Entity('users')
-export class User {
-  @ObjectIdColumn()
-  id: string;
 
-  @Column('text', {
+@Schema({ timestamps: true })
+export class User extends Document {
+  
+  @Transform(({ value }) => value.toString())
+  _id: ObjectId;
+
+  @Prop({
     unique: true,
   })
   email: string;
 
-  @Column('text', {
+  @Prop({
     default: null,
   })
   cloudinary_id: string;
 
-  @Column('text', {
+  @Prop({
     default: null,
   })
   avatar: string;
 
-  @Column('text', {
-    select: false,
-  })
+  @Prop({select:false})
+  @Exclude()
   password: string;
 
-  @Column('text')
+  @Prop()
   fullName: string;
 
-  @Column('boolean', {default: true})
-  isActive = true;
-
-  @Column('text', {
-    array: true,
-    default: ['user'],
+  @Prop({
+    type: Boolean,
+    default: true
   })
-  roles = ['user'];
+  isActive: boolean;
 
-  // @OneToMany(() => Product, (product) => product.user)
-  // product: Product;
+  @Prop({ 
+       type:  mongoose.Schema.Types.Array,
+       default : ['user']
+      })
+  roles: string[];
 
-  @BeforeInsert()
-  checkEmailBeforeInsert() {
-    this.email = this.email.toLocaleLowerCase().trim();
-  }
-
-  @BeforeUpdate()
-  checkEmailBeforeUpdate() {
-    this.checkEmailBeforeInsert();
-  }
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game'}],
+  })
+  @Type(() => Game)
+  games: Game;
+  
 }
+export const UserSchema = SchemaFactory.createForClass(User);
