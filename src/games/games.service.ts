@@ -1,6 +1,5 @@
 import { Injectable, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { ModesService } from '../modes/modes.service';
@@ -58,7 +57,7 @@ export class GamesService {
 
   async findByMode(id: string) {
     
-    const games = await this.gameModel.find({mode: id }).populate(['user','mode']);
+    const games = await this.gameModel.find({mode: id }).populate(['user']);
   
     return games
   }

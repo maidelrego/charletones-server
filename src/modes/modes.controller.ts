@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, PipeTransform } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { ModesService } from './modes.service';
 import { CreateModeDto } from './dto/create-mode.dto';
-import { UpdateModeDto } from './dto/update-mode.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 

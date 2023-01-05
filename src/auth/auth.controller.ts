@@ -3,8 +3,8 @@ import {
   Get,
   Post,
   Body,
-  UseGuards,
-  SetMetadata,
+  // UseGuards,
+  // SetMetadata,
   UseInterceptors,
   UploadedFile,
   ParseFilePipe,
@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto/index';
-import { AuthGuard } from '@nestjs/passport';
-import { User } from './entities/user.entity';
-import { UserRoleGuard } from './guards/user-role.guard';
-import { Auth, GetUser, RoleProtected } from './decorators/index';
-import { ValidRoles } from './interfaces/valid-roles.interfece';
+// import { AuthGuard } from '@nestjs/passport';
+// import { User } from './entities/user.entity';
+// import { UserRoleGuard } from './guards/user-role.guard';
+// import { Auth, GetUser, RoleProtected } from './decorators/index';
+// import { ValidRoles } from './interfaces/valid-roles.interfece';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PaginationDto } from '../common/dto/pagination.dto';

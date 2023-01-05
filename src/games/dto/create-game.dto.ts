@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsPositive, IsMongoId, Min } from 'class-validator';
+import { IsBoolean, IsNumber, IsMongoId, Min } from 'class-validator';
 
 export class CreateGameDto {
 

@@ -1,4 +1,4 @@
-import { IsArray, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 /* eslint-disable prettier/prettier */
 import {
   IsEmail,

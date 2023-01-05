@@ -2,7 +2,6 @@ import { Game } from '../../games/entities/game.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Exclude, Transform, Type } from 'class-transformer';
 import mongoose, { Document, ObjectId } from 'mongoose';
-import { string } from 'joi';
 
 
 @Schema({ timestamps: true })

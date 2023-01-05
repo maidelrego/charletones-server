@@ -3,10 +3,8 @@ import {
   BadRequestException,
   Logger,
   InternalServerErrorException,
-  UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto, LoginUserDto } from './dto/index';
 import { User } from './entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
@@ -56,7 +54,7 @@ export class AuthService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-    const { password, email } = loginUserDto;
+    // const { password, email } = loginUserDto;
 
     // const user = await this.userRepository.findOne({
     //   where: { email },
@@ -75,14 +73,13 @@ export class AuthService {
   }
 
   async findAll(paginationDto: PaginationDto){
-    console.log(paginationDto);
     
     const { limit = 10, offset = 0 } = paginationDto;
 
     const users = await this.userModel.find({
       take: limit,
       skip: offset,
-     });
+     }).populate(['games']);
 
     return users;
   }
@@ -95,7 +92,7 @@ export class AuthService {
         user = await this.userModel.findById(id);
       }
 
-      if (!user) throw new NotFoundException('');
+      if (!user) throw new NotFoundException('User not found');
 
       return user;
   }
