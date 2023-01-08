@@ -39,10 +39,14 @@ export class AuthController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [new MaxFileSizeValidator({ maxSize: 311000 })],
+        fileIsRequired: false
       }),
     )
     image: Express.Multer.File,
     ) {
+      
+      if (!image) return this.authService.create(createUserDto);
+
       const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
         { folder: 'Avatars' },
         image,
