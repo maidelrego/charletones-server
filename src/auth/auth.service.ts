@@ -79,7 +79,7 @@ export class AuthService {
     const users = await this.userModel.find({
       take: limit,
       skip: offset,
-     }).populate(['games']);
+     });
 
     return users;
   }
