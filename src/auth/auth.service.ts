@@ -13,6 +13,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { isValidObjectId, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -42,34 +43,38 @@ export class AuthService {
     }
   }
 
-  public checkAuthStatus(user: User) {
-    return {
-      ...user,
-      token: this.getJwtToken({ id: user._id.toString() }),
-    };
-  }
-  private getJwtToken(payload: JwtPayload) {
-    const token = this.jwtService.sign(payload);
-    return token;
+  async update(id, updateUserDto: UpdateUserDto) {
+    console.log('updateUserDto', updateUserDto, id);
+
+    const filter = { _id:  id};
+    const update = { ...updateUserDto };
+
+    const updatedUser = await this.userModel.findOneAndUpdate(filter, update, { new: true })
+
+    return updatedUser;
   }
 
+  
   async login(loginUserDto: LoginUserDto) {
-    // const { password, email } = loginUserDto;
+    const { password, email } = loginUserDto;
 
-    // const user = await this.userRepository.findOne({
-    //   where: { email },
-    //   select: { email: true, password: true, id: true },
-    // });
+    const user = await this.userModel.findOne({ email }).select('+password');
 
-    // if (!user || !bcrypt.compareSync(password, user.password))
-    //   throw new UnauthorizedException('Not valid credentials');
+    if (!user) throw new BadRequestException('Invalid credentials (email)');
 
-    // delete user.password;
+    if (await !bcrypt.compareSync(password, user.password))
+      throw new BadRequestException('Invalid credentials (password)');
 
-    // return {
-    //   ...user,
-    //   token: this.getJwtToken({ id: user.id }),
-    // };
+    const validatedUser = {
+      _id: user._id,
+      cloudinary_id: user.cloudinary_id,
+      avatar: user.avatar,
+      fullName: user.fullName,
+      roles: user.roles,
+      token: this.getJwtToken({ id: user._id.toString() }),
+    }
+
+    return validatedUser
   }
 
   async findAll(paginationDto: PaginationDto){
@@ -84,17 +89,29 @@ export class AuthService {
     return users;
   }
 
-  async findOne( id: string ){
+  async findOneById( id: string ){
   
-      let user: User;
+    let user: User;
 
-      if (isValidObjectId(id)) {
-        user = await this.userModel.findById(id);
-      }
+    if (isValidObjectId(id)) {
+      user = await this.userModel.findById(id);
+    }
 
-      if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
-      return user;
+    return user;
+  }
+
+  public checkAuthStatus(user: User) {
+    return {
+      ...user,
+      token: this.getJwtToken({ id: user._id.toString() }),
+    };
+  }
+
+  private getJwtToken(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload);
+    return token;
   }
 
   private handleDBExceptions(error: any): never {

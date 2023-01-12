@@ -27,7 +27,7 @@ export class GamesService {
    
    try {
     
-   const user = await this.authService.findOne(user_id);
+   const user = await this.authService.findOneById(user_id);
    const mode = await this.modeService.findOne(mode_id);
 
    const createGame = new this.gameModel({
