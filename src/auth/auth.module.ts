@@ -24,12 +24,6 @@ import { MongooseModule } from '@nestjs/mongoose';
       defaultStrategy: 'jwt'
     }),
     CloudinaryModule,
-    // JwtModule.register({ //normal implementation
-    //   secret: process.env.JWT_SECRET,
-    //   signOptions:{
-    //     expiresIn: '2h'
-    //   }
-    // })
     JwtModule.registerAsync({ //async implementation
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -37,7 +31,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         return {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
-            expiresIn: '20s'
+            expiresIn: '10h'
           }
         }
       }

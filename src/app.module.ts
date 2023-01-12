@@ -17,15 +17,6 @@ import { AuthModule } from './auth/auth.module';
       validationSchema: JoiValidationSchema,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
-    // TypeOrmModule.forRoot({
-    //   type: 'mongodb',
-    //   url: process.env.MONGO_URI,
-    //   useNewUrlParser: true,
-    //   logging: false,
-    //   autoLoadEntities: true,
-    //   synchronize: false,
-    //   useUnifiedTopology: true
-    // }),
     CommonModule,
     CloudinaryModule,
     GamesModule,

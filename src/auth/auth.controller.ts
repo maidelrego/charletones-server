@@ -23,6 +23,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { GetUser } from './decorators/get-user.decorator';
+import { Auth } from './decorators';
+import { User } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -45,26 +49,45 @@ export class AuthController {
     image: Express.Multer.File,
     ) {
       
-      if (!image) return this.authService.create(createUserDto);
-
-      const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
-        { folder: 'Avatars' },
-        image,
-      );  
-      createUserDto.avatar = secure_url;
-      createUserDto.cloudinary_id = asset_id;
-
-    return this.authService.create(createUserDto);
+      createUserDto.image = image;
+      return this.authService.create(createUserDto);
   }
 
   @Get('users')
+  @Auth()
   getAllUsers(@Query() paginationDto: PaginationDto){
     return this.authService.findAll(paginationDto);
   }
 
+  @Get('checkAuth')
+  @Auth()
+  checkAuthStatus(@GetUser() user: User) {
+    return this.authService.checkAuthStatus(user);
+  }
+
   @Get('user/:id')
+  @Auth()
   getOneByEmail(@Param('id',ParseMongoIdPipe) id: string){
     return this.authService.findOne(id);
+  }
+
+  @Post('update/:id')
+  @Auth()
+  @UseInterceptors(FileInterceptor('image'))
+  async updateUser(
+    @Param('id',ParseMongoIdPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 311000 })],
+        fileIsRequired: false
+      }),
+    )
+    image: Express.Multer.File,
+    ) {
+    
+      updateUserDto.image = image;
+      return this.authService.update(updateUserDto,id);
   }
    
   @Post('login')
