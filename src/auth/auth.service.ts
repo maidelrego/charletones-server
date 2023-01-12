@@ -81,7 +81,7 @@ export class AuthService {
         ...resOfUser,
         password: newPassword
         });
-        
+
     } catch (error) {
       this.handleDBExceptions(error);
     }
@@ -112,6 +112,7 @@ export class AuthService {
     delete user.password;
 
     return {
+       user,
        token: this.getJwtToken({ id: user.id }),
     };
   }
