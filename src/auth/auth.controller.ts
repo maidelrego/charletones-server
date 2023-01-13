@@ -85,7 +85,6 @@ export class AuthController {
     )
     image: Express.Multer.File,
     ) {
-    
       updateUserDto.image = image;
       return this.authService.update(updateUserDto,id);
   }

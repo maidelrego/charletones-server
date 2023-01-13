@@ -47,19 +47,24 @@ export class AuthService {
         password: bcrypt.hashSync(password, 10),
       });
 
-      return {
-        user,
+      const newUser = {
+        _id: user._id,
         token: this.getJwtToken({ id: user._id.toString() }),
+      }
+
+      return {
+        ...newUser
       };
+
     } catch (error) {
       this.handleDBExceptions(error);
     }
   }
 
   async update(updateUserDto: UpdateUserDto, id: string) {
-   
     let newPassword = '';
     const user = await this.findOne(id);
+    newPassword = user.password;
     const { image ,password, ...resOfUser } = updateUserDto;
 
     if (password) {
@@ -67,11 +72,16 @@ export class AuthService {
     }
 
     if (image){
-      await this.cloudinaryService.deleteImages(user.cloudinary_id)
+      
+      if (user.cloudinary_id) {
+        await this.cloudinaryService.deleteImages(user.cloudinary_id)
+      }
+      
       const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
         { folder: 'Avatars' },
         image,
       );  
+
       resOfUser.avatar = secure_url;
       resOfUser.cloudinary_id = asset_id;
     }
@@ -80,7 +90,7 @@ export class AuthService {
       await user.updateOne({
         ...resOfUser,
         password: newPassword
-        });
+        }, { new: true });
 
     } catch (error) {
       this.handleDBExceptions(error);
@@ -104,17 +114,19 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     const { password, email } = loginUserDto;
 
-    const user = await this.userModel.findOne({ email }, { email: 1, password: 1, _id: 1 });
-    
-    if (!user || !bcrypt.compareSync(password, user.password))
-      throw new UnauthorizedException('Not valid credentials');
+    const user = await this.userModel.findOne({ email }).select('+password');
 
-    delete user.password;
+    if (!user) throw new BadRequestException('Invalid credentials (email)');
 
-    return {
-       user,
-       token: this.getJwtToken({ id: user.id }),
-    };
+    if (await !bcrypt.compareSync(password, user.password))
+      throw new UnauthorizedException('Not valid credentials')
+
+    const validatedUser = {
+      _id: user._id,
+      token: this.getJwtToken({ id: user._id.toString() }),
+    }
+
+    return validatedUser
   }
 
   async findAll(paginationDto: PaginationDto){
