@@ -101,10 +101,12 @@ export class AuthService {
  }
 
   public checkAuthStatus(user: User) {
-    return {
-      ...user,
+    const authUser ={
+      _id: user._id,
       token: this.getJwtToken({ id: user._id.toString() }),
-    };
+    }
+    
+    return authUser;
   }
   private getJwtToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);
