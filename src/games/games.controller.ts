@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body,Param,Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -23,17 +31,25 @@ export class GamesController {
 
   @Get('/by-mode/:id')
   @UseGuards(AuthGuard('jwt'))
-  findGamesByEmail(@Param('id',ParseMongoIdPipe) id: string) {
+  findGamesByMode(@Param('id', ParseMongoIdPipe) id: string) {
     return this.gamesService.findByMode(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
-  //   return this.gamesService.update(+id, updateGameDto);
-  // }
+  @Get('/by-date/:id')
+  @UseGuards(AuthGuard('jwt'))
+  findGamesByDate(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.gamesService.findAndGroupByDate(id);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.gamesService.remove(+id);
-  // }
+  @Get('/user-most-wins')
+  @UseGuards(AuthGuard('jwt'))
+  findUserWithMostWins() {
+    return this.gamesService.findUserWithMostWins();
+  }
+
+  @Get('/user-most-loses')
+  @UseGuards(AuthGuard('jwt'))
+  findUserWithMostLosses() {
+    return this.gamesService.getUserWithMostArgoyaOverall();
+  }
 }
