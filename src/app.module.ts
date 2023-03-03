@@ -9,7 +9,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { GamesModule } from './games/games.module';
 import { ModesModule } from './modes/modes.module';
 import { AuthModule } from './auth/auth.module';
-import { MessagesWsModule } from './messages-ws/messages-ws.module';
 
 @Module({
   imports: [
@@ -22,8 +21,7 @@ import { MessagesWsModule } from './messages-ws/messages-ws.module';
     CloudinaryModule,
     GamesModule,
     ModesModule,
-    AuthModule,
-    MessagesWsModule
+    AuthModule
   ],
   controllers: [],
   providers: [],
