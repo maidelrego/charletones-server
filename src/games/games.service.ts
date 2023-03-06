@@ -12,6 +12,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Injectable()
 export class GamesService {
@@ -161,6 +162,7 @@ export class GamesService {
       .find({ mode: id })
       .sort({ createdAt: -1 })
       .populate(['user']);
+
     const augmentedData = this.tableAugmentData(games);
 
     const groupedData = _.groupBy(augmentedData, 'createdAt');
@@ -190,7 +192,7 @@ export class GamesService {
     data = data.map((row) => {
       return {
         ...row._doc,
-        createdAt: new Date(row.createdAt).toDateString(),
+        createdAt: moment(row.createdAt).format('DD/MM/YYYY'),
         player: row.user.fullName,
       };
     });
