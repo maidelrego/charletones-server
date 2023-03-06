@@ -5,33 +5,30 @@ import { Type } from 'class-transformer';
 import mongoose, { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class Game  extends Document {
+export class Game extends Document {
+  @Prop({
+    type: Boolean,
+  })
+  win: boolean;
 
-    @Prop({
-        type: Boolean,
-      })
-    win: boolean;
+  @Prop({
+    type: Boolean,
+  })
+  argoya: boolean;
 
-    @Prop({
-        type: Boolean,
-      })
-    argoya: boolean;
+  @Prop({ default: 0 })
+  kills: number;
 
-    @Prop({ default: 0 })
-      kills: number;
+  @Prop({ default: 0 })
+  deaths: number;
 
-    @Prop({default: 0 })
-      deaths: number;
-    
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Mode.name })
-    @Type(() => Mode)
-     mode: Mode 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Mode.name })
+  @Type(() => Mode)
+  mode: Mode;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
-    @Type(() => User)
-     user: User;
-
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Type(() => User)
+  user: User;
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);
-
