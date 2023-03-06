@@ -31,10 +31,9 @@ import { User } from './entities/user.entity';
 @Controller('auth')
 export class AuthController {
   constructor(
-     private readonly authService: AuthService,
-     private readonly cloudinaryService: CloudinaryService,
-
-     ) {}
+    private readonly authService: AuthService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post('register')
   @UseInterceptors(FileInterceptor('image'))
@@ -43,19 +42,18 @@ export class AuthController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [new MaxFileSizeValidator({ maxSize: 311000 })],
-        fileIsRequired: false
+        fileIsRequired: false,
       }),
     )
     image: Express.Multer.File,
-    ) {
-      
-      createUserDto.image = image;
-      return this.authService.create(createUserDto);
+  ) {
+    createUserDto.image = image;
+    return this.authService.create(createUserDto);
   }
 
   @Get('users')
   @Auth()
-  getAllUsers(@Query() paginationDto: PaginationDto){
+  getAllUsers(@Query() paginationDto: PaginationDto) {
     return this.authService.findAll(paginationDto);
   }
 
@@ -67,7 +65,7 @@ export class AuthController {
 
   @Get('user/:id')
   @Auth()
-  getOneByEmail(@Param('id',ParseMongoIdPipe) id: string){
+  getOneByEmail(@Param('id', ParseMongoIdPipe) id: string) {
     return this.authService.findOne(id);
   }
 
@@ -75,20 +73,20 @@ export class AuthController {
   @Auth()
   @UseInterceptors(FileInterceptor('image'))
   async updateUser(
-    @Param('id',ParseMongoIdPipe) id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile(
       new ParseFilePipe({
         validators: [new MaxFileSizeValidator({ maxSize: 311000 })],
-        fileIsRequired: false
+        fileIsRequired: false,
       }),
     )
     image: Express.Multer.File,
-    ) {
-      updateUserDto.image = image;
-      return this.authService.update(updateUserDto,id);
+  ) {
+    updateUserDto.image = image;
+    return this.authService.update(updateUserDto, id);
   }
-   
+
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
