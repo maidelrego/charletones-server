@@ -2,10 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Exclude, Transform } from 'class-transformer';
 import mongoose, { Document, ObjectId } from 'mongoose';
 
-
 @Schema({ timestamps: true })
 export class User extends Document {
-  
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
@@ -24,7 +22,7 @@ export class User extends Document {
   })
   avatar: string;
 
-  @Prop({select:false})
+  @Prop({ select: false })
   @Exclude()
   password: string;
 
@@ -33,15 +31,14 @@ export class User extends Document {
 
   @Prop({
     type: Boolean,
-    default: true
+    default: true,
   })
   isActive: boolean;
 
-  @Prop({ 
-       type:  mongoose.Schema.Types.Array,
-       default : ['user']
-      })
+  @Prop({
+    type: mongoose.Schema.Types.Array,
+    default: ['user'],
+  })
   roles: string[];
-  
 }
 export const UserSchema = SchemaFactory.createForClass(User);

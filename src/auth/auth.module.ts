@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport'
-import { JwtModule } from '@nestjs/jwt'
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User, UserSchema } from './entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt-strategy';
-import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService,JwtStrategy],
+  providers: [AuthService, JwtStrategy],
   imports: [
     MongooseModule.forFeature([
       {
@@ -21,24 +21,29 @@ import { MongooseModule } from '@nestjs/mongoose';
     ]),
     ConfigModule,
     PassportModule.register({
-      defaultStrategy: 'jwt'
+      defaultStrategy: 'jwt',
     }),
     CloudinaryModule,
-    JwtModule.registerAsync({ //async implementation
+    JwtModule.registerAsync({
+      //async implementation
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
-            expiresIn: '10h'
-          }
-        }
-      }
-
-    })
+            expiresIn: '10h',
+          },
+        };
+      },
+    }),
   ],
-  exports: [MongooseModule,JwtStrategy,PassportModule,JwtModule,AuthService]
-
+  exports: [
+    MongooseModule,
+    JwtStrategy,
+    PassportModule,
+    JwtModule,
+    AuthService,
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}

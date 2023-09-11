@@ -22,7 +22,7 @@ import { CreateUserDto, LoginUserDto } from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { Auth } from './decorators';

@@ -9,6 +9,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { GamesModule } from './games/games.module';
 import { ModesModule } from './modes/modes.module';
 import { AuthModule } from './auth/auth.module';
+import { TeamsModule } from './teams/teams.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { AuthModule } from './auth/auth.module';
     CloudinaryModule,
     GamesModule,
     ModesModule,
-    AuthModule
+    AuthModule,
+    TeamsModule
   ],
   controllers: [],
   providers: [],

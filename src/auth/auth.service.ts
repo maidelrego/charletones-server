@@ -30,16 +30,16 @@ export class AuthService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const { image ,password, ...resOfUser } = createUserDto;
+      const { image, password, ...resOfUser } = createUserDto;
 
-      if (image){
-        const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
-          { folder: 'Avatars' },
-          image,
-        );  
+      if (image) {
+        const { secure_url, asset_id } =
+          await this.cloudinaryService.uploadImage(
+            { folder: 'Avatars' },
+            image,
+          );
         resOfUser.avatar = secure_url;
         resOfUser.cloudinary_id = asset_id;
-
       }
 
       const user = await this.userModel.create({
@@ -50,12 +50,11 @@ export class AuthService {
       const newUser = {
         _id: user._id,
         token: this.getJwtToken({ id: user._id.toString() }),
-      }
-
-      return {
-        ...newUser
       };
 
+      return {
+        ...newUser,
+      };
     } catch (error) {
       this.handleDBExceptions(error);
     }
@@ -65,47 +64,47 @@ export class AuthService {
     let newPassword = '';
     const user = await this.findOne(id);
     newPassword = user.password;
-    const { image ,password, ...resOfUser } = updateUserDto;
+    const { image, password, ...resOfUser } = updateUserDto;
 
     if (password) {
       newPassword = bcrypt.hashSync(password, 10);
     }
 
-    if (image){
-      
+    if (image) {
       if (user.cloudinary_id) {
-        await this.cloudinaryService.deleteImages(user.cloudinary_id)
+        await this.cloudinaryService.deleteImages(user.cloudinary_id);
       }
-      
+
       const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
         { folder: 'Avatars' },
         image,
-      );  
+      );
 
       resOfUser.avatar = secure_url;
       resOfUser.cloudinary_id = asset_id;
     }
- 
-    try {
-      await user.updateOne({
-        ...resOfUser,
-        password: newPassword
-        }, { new: true });
 
+    try {
+      await user.updateOne(
+        {
+          ...resOfUser,
+          password: newPassword,
+        },
+        { new: true },
+      );
     } catch (error) {
       this.handleDBExceptions(error);
     }
 
-    return { ...user.toJSON(), ...resOfUser }
-
- }
+    return { ...user.toJSON(), ...resOfUser };
+  }
 
   public checkAuthStatus(user: User) {
-    const authUser ={
+    const authUser = {
       _id: user._id,
       token: this.getJwtToken({ id: user._id.toString() }),
-    }
-    
+    };
+
     return authUser;
   }
   private getJwtToken(payload: JwtPayload) {
@@ -121,39 +120,37 @@ export class AuthService {
     if (!user) throw new BadRequestException('Invalid credentials (email)');
 
     if (await !bcrypt.compareSync(password, user.password))
-      throw new UnauthorizedException('Not valid credentials')
+      throw new UnauthorizedException('Not valid credentials');
 
     const validatedUser = {
       _id: user._id,
       token: this.getJwtToken({ id: user._id.toString() }),
-    }
+    };
 
-    return validatedUser
+    return validatedUser;
   }
 
-  async findAll(paginationDto: PaginationDto){
-    
+  async findAll(paginationDto: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDto;
 
     const users = await this.userModel.find({
       take: limit,
       skip: offset,
-     });
+    });
 
     return users;
   }
 
-  async findOne( id: string ){
-  
-      let user: User;
+  async findOne(id: string) {
+    let user: User;
 
-      if (isValidObjectId(id)) {
-        user = await this.userModel.findById(id);
-      }
+    if (isValidObjectId(id)) {
+      user = await this.userModel.findById(id);
+    }
 
-      if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
-      return user;
+    return user;
   }
 
   private handleDBExceptions(error: any): never {

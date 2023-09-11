@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { Game } from './entities/game.entity';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { ModesService } from '../modes/modes.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { Model } from 'mongoose';
