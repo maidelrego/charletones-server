@@ -43,7 +43,7 @@ export class TeamsController {
   // }
 
   @Put(':id')
-  // @Auth()
+  @Auth()
   @UseInterceptors(FileInterceptor('image'))
   async updateTeam(
     @Param('id', ParseMongoIdPipe) id: string,
