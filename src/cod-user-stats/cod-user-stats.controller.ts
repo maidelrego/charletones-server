@@ -16,6 +16,11 @@ export class CodUserStatsController {
     return this.codUserStatsService.findAll();
   }
 
+  @Get('all-time-stats')
+  allTimeStats() {
+    return this.codUserStatsService.getAllTimeStats();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.codUserStatsService.findOne(+id);

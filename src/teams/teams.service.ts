@@ -24,10 +24,7 @@ export class TeamsService {
 
       if (image) {
         const { secure_url, asset_id } =
-          await this.cloudinaryService.uploadImage(
-            { folder: 'Avatars' },
-            image,
-          );
+          await this.cloudinaryService.uploadImage({ folder: 'Team' }, image);
         restOfTeam.avatar = secure_url;
         restOfTeam.cloudinary_id = asset_id;
       }
@@ -50,12 +47,42 @@ export class TeamsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} team`;
+  async update(id: string, updateTeamDto: UpdateTeamDto) {
+    const teamToUpdate = await this.findOne(id);
+
+    if (!teamToUpdate) throw new BadRequestException('Team not found');
+
+    const { image, ...restOfTeam } = updateTeamDto;
+
+    if (image) {
+      if (teamToUpdate.cloudinary_id) {
+        this.cloudinaryService.deleteImages(teamToUpdate.cloudinary_id);
+      }
+      const { secure_url, asset_id } = await this.cloudinaryService.uploadImage(
+        { folder: 'Team' },
+        image,
+      );
+      restOfTeam.avatar = secure_url;
+      restOfTeam.cloudinary_id = asset_id;
+    }
+
+    try {
+      const updatedTeam = await this.teamModel.findByIdAndUpdate(
+        id,
+        restOfTeam,
+      );
+      return updatedTeam;
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
-  update(id: number, updateTeamDto: UpdateTeamDto) {
-    return `This action updates a #${id} team`;
+  async findOne(id: string) {
+    try {
+      return this.teamModel.findById(id).populate('members');
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
   remove(id: number) {

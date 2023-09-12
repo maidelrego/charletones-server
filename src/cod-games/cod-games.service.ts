@@ -48,13 +48,17 @@ export class CodGamesService {
 
   findAll() {
     try {
-      return this.codGame.find().populate({
-        path: 'participants',
-        populate: {
-          path: 'user', // Populate the 'user' field within 'participants'
-          model: 'User', // Replace 'User' with the actual model name of the 'user' entity
-        },
-      });
+      return this.codGame
+        .find()
+        .populate({
+          path: 'participants',
+          populate: {
+            path: 'user', // Populate the 'user' field within 'participants'
+            model: 'User', // Replace 'User' with the actual model name of the 'user' entity
+          },
+        })
+        .populate('win')
+        .lean();
     } catch (error) {
       this.handleDBExceptions(error);
     }
@@ -62,6 +66,39 @@ export class CodGamesService {
 
   findOne(id: number) {
     return `This action returns a #${id} codGame`;
+  }
+
+  async getGamesGroupedByDate(): Promise<
+    { date: Date; winners: { mode: number; team: any }[] }[]
+  > {
+    const games = await this.findAll();
+
+    // Group games by date
+    const groupedGames: Map<
+      string,
+      { mode: number; winners: { mode: number; team: any }[] }
+    > = new Map();
+    for (const game of games) {
+      const gameDate = game.createdAt.toISOString().split('T')[0]; // Assuming 'createdAt' is the date field
+      const winners = game.win ? [{ mode: game.mode, team: game.win }] : [];
+
+      if (groupedGames.has(gameDate)) {
+        const existingData = groupedGames.get(gameDate);
+        existingData.winners = [...existingData.winners, ...winners];
+        groupedGames.set(gameDate, existingData);
+      } else {
+        groupedGames.set(gameDate, { mode: game.mode, winners });
+      }
+    }
+
+    // Convert the map to an array of objects
+    const timeline: { date: Date; winners: { mode: number; team: any }[] }[] =
+      [];
+    groupedGames.forEach(({ mode, winners }, date) => {
+      timeline.push({ date: new Date(date), winners });
+    });
+
+    return timeline;
   }
 
   private handleDBExceptions(error: any): never {

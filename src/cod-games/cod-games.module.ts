@@ -4,6 +4,7 @@ import { CodGamesController } from './cod-games.controller';
 import { CodGame, CodGameShema } from './entities/cod-game.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CodUserStatsModule } from '../cod-user-stats/cod-user-stats.module';
+import { TeamsModule } from 'src/teams/teams.module';
 
 @Module({
   controllers: [CodGamesController],
@@ -16,6 +17,7 @@ import { CodUserStatsModule } from '../cod-user-stats/cod-user-stats.module';
       },
     ]),
     CodUserStatsModule,
+    TeamsModule,
   ],
   exports: [CodGamesService, MongooseModule],
 })

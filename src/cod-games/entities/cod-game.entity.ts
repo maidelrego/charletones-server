@@ -19,6 +19,8 @@ export class CodGame extends Document {
   })
   @Type(() => CodUserStat)
   participants: CodUserStat[];
+
+  createdAt: Date;
 }
 
 export const CodGameShema = SchemaFactory.createForClass(CodGame);

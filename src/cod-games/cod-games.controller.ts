@@ -16,6 +16,11 @@ export class CodGamesController {
     return this.codGamesService.findAll();
   }
 
+  @Get('timeline')
+  getGamesGroupedByDate() {
+    return this.codGamesService.getGamesGroupedByDate();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.codGamesService.findOne(+id);

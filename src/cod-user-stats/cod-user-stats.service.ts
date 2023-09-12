@@ -31,6 +31,35 @@ export class CodUserStatsService {
     return `This action returns all codUserStats`;
   }
 
+  async getAllTimeStats(): Promise<any[]> {
+    const aggregatedStats = await this.codUserStatModel.aggregate([
+      {
+        $group: {
+          _id: '$user',
+          totalKills: { $sum: '$kills' },
+          totalDeaths: { $sum: '$deaths' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          user: '$_id',
+          totalKills: 1,
+          totalDeaths: 1,
+          kdRatio: {
+            $cond: [
+              { $eq: ['$totalDeaths', 0] }, // Handle division by zero
+              '$totalKills',
+              { $divide: ['$totalKills', '$totalDeaths'] },
+            ],
+          },
+        },
+      },
+    ]);
+
+    return aggregatedStats;
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} codUserStat`;
   }
