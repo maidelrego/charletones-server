@@ -10,6 +10,8 @@ import { GamesModule } from './games/games.module';
 import { ModesModule } from './modes/modes.module';
 import { AuthModule } from './auth/auth.module';
 import { TeamsModule } from './teams/teams.module';
+import { CodGamesModule } from './cod-games/cod-games.module';
+import { CodUserStatsModule } from './cod-user-stats/cod-user-stats.module';
 
 @Module({
   imports: [
@@ -23,7 +25,9 @@ import { TeamsModule } from './teams/teams.module';
     GamesModule,
     ModesModule,
     AuthModule,
-    TeamsModule
+    TeamsModule,
+    CodGamesModule,
+    CodUserStatsModule
   ],
   controllers: [],
   providers: [],

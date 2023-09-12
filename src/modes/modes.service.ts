@@ -8,33 +8,30 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ModesService {
-
   constructor(
     @InjectModel(Mode.name)
     private readonly modeModel: Model<Mode>,
-  ){}
+  ) {}
 
   async create(createModeDto: CreateModeDto) {
-    
     createModeDto.slug = createModeDto.name.split(' ').join('_').toLowerCase();
     const mode = await this.modeModel.create(createModeDto);
-     
-     return mode;
+
+    return mode;
   }
 
- async findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDto;
 
     const modes = await this.modeModel.find({
       take: limit,
       skip: offset,
-      });
+    });
 
-    return modes
+    return modes;
   }
 
   async findOne(id: string) {
-
     let mode: Mode;
 
     if (isValidObjectId(id)) {
