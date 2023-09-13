@@ -69,7 +69,7 @@ export class CodGamesService {
   }
 
   async getGamesGroupedByDate(): Promise<
-    { date: Date; winners: { mode: number; team: any }[] }[]
+    { date: string; winners: { mode: number; team: any }[] }[]
   > {
     const games = await this.findAll();
 
@@ -92,10 +92,10 @@ export class CodGamesService {
     }
 
     // Convert the map to an array of objects
-    const timeline: { date: Date; winners: { mode: number; team: any }[] }[] =
+    const timeline: { date: string; winners: { mode: number; team: any }[] }[] =
       [];
     groupedGames.forEach(({ mode, winners }, date) => {
-      timeline.push({ date: new Date(date), winners });
+      timeline.push({ date: date, winners });
     });
 
     return timeline;
