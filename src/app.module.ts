@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { TeamsModule } from './teams/teams.module';
 import { CodGamesModule } from './cod-games/cod-games.module';
 import { CodUserStatsModule } from './cod-user-stats/cod-user-stats.module';
+import { RocketLeagueGamesModule } from './rocket-league-games/rocket-league-games.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { CodUserStatsModule } from './cod-user-stats/cod-user-stats.module';
     AuthModule,
     TeamsModule,
     CodGamesModule,
-    CodUserStatsModule
+    CodUserStatsModule,
+    RocketLeagueGamesModule
   ],
   controllers: [],
   providers: [],

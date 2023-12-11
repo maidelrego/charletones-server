@@ -39,9 +39,9 @@ export class TeamsService {
     }
   }
 
-  findAll() {
+  findAll(modeId: string) {
     try {
-      return this.teamModel.find().populate('members');
+      return this.teamModel.find({ mode: modeId }).populate('members');
     } catch (error) {
       this.handleDBExceptions(error);
     }

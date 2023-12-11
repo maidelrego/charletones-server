@@ -2,6 +2,7 @@ import { User } from '../../auth/entities/user.entity';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import mongoose, { Document } from 'mongoose';
+import { Mode } from 'src/modes/entities/mode.entity';
 
 @Schema({ timestamps: true })
 export class Team extends Document {
@@ -19,6 +20,13 @@ export class Team extends Document {
     default: null,
   })
   avatar: string;
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Mode' }],
+    default: [],
+  })
+  @Type(() => Mode)
+  mode: Mode[];
 
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

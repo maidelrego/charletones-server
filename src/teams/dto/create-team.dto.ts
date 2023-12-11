@@ -23,6 +23,10 @@ export class CreateTeamDto {
   cloudinary_id?: string;
 
   @IsOptional()
+  @IsString()
+  mode?: string;
+
+  @IsOptional()
   @IsArray()
   members?: string[];
 }

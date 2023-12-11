@@ -27,20 +27,15 @@ export class TeamsController {
     return this.teamsService.create(createTeamDto);
   }
 
-  @Get()
-  findAll() {
-    return this.teamsService.findAll();
+  @Get(':modeId')
+  findAll(@Param('modeId') modeId: string) {
+    return this.teamsService.findAll(modeId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.teamsService.findOne(id);
   }
-
-  // @Put(':id')
-  // update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
-  //   return this.teamsService.update(id, updateTeamDto);
-  // }
 
   @Put(':id')
   @Auth()

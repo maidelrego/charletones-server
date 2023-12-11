@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ModesService } from './modes.service';
 import { CreateModeDto } from './dto/create-mode.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -23,7 +31,7 @@ export class ModesController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id',ParseMongoIdPipe) id: string) {
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.modesService.findOne(id);
   }
 
